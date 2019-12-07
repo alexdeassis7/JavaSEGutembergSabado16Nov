@@ -1,5 +1,7 @@
 package demo;
 
+import java.util.Scanner;
+
 public class DocenteDeSecundaria {
 
 	DocenteDePrimaria d1 = new DocenteDePrimaria();
@@ -14,6 +16,8 @@ public class DocenteDeSecundaria {
 	private int horasExtras;
 	private double sueldo;
 	private String fechaDeNacimiento;
+	// este array lo utilizamos para cargas los sueldo de cada mes
+	private double[] arrayAnioSueldos = new double[12];
 
 	private final float precioHoraBase = (d1.getPrecioHoraBase() * 1.15f);
 	private final float precioHoraExtra = (d1.getPrecioHoraExtra() * 1.15f);
@@ -65,7 +69,9 @@ public class DocenteDeSecundaria {
 
 //	un método que retorne el sueldo neto 
 	public double getSueldoBruto() {
+
 		sueldo = (precioHoraBase * horasBase) + (precioHoraExtra * horasExtras);
+
 		return sueldo;
 	}
 
@@ -75,7 +81,9 @@ public class DocenteDeSecundaria {
 		float sueldoNeto = (float) (getSueldoBruto() - (getSueldoBruto() * 0.21));
 		return sueldoNeto;
 	}
-//	un método que calcule el sueldo anual complementario 	
+
+	// un método que calcule el sueldo anual complementario
+
 	public void setEdad(int edad) {
 		if (edad > 23 && edad < 55)
 			this.edad = edad;
@@ -135,24 +143,47 @@ public class DocenteDeSecundaria {
 		return horasBase;
 	}
 
-	public void setHorasBase(int horasBase) {
-		if (horasBase >= 40) {
-			this.horasBase = horasBase;
-		} else {
-			System.out.println("ERROR : No se puede cargar menos de 40 horas base al Docente");
-		}
+	public void setHorasBase() {
+		int horasIngresada = 0;
+
+		do {
+
+			Scanner teclado = new Scanner(System.in);
+			System.out.println("ingrese por favor las horas base");
+			horasIngresada = teclado.nextInt();
+
+			if (horasIngresada < 40) {
+				System.out.println("Error , no debe cargar menos de 40 horas base intente de nuevo");
+			}
+
+		} while (horasIngresada < 40);
+
+		this.horasBase = horasBase;
+		System.out.println("se cargaron las horas Base al docente ");
+
 	}
 
 	public int getHorasExtras() {
 		return horasExtras;
 	}
 
-	public void setHorasExtras(int horasExtras) {
-		if (horasExtras <= 20) {
-			this.horasExtras = horasExtras;
-		} else {
-			System.out.println("ERROR: no se puede realizar mas de 20 hs Extras por mes!");
-		}
+	public void setHorasExtras() {
+		int horasIngresada = 0;
+
+		do {
+
+			Scanner teclado = new Scanner(System.in);
+			System.out.println("ingrese por favor las horas Extras");
+			horasIngresada = teclado.nextInt();
+
+			if (horasIngresada >= 20) {
+				System.out.println("Error , no debe cargar mas de 20 extras intente de nuevo");
+			}
+
+		} while (horasIngresada >= 20);
+
+		this.horasExtras = horasExtras;
+		System.out.println("se cargaron las horas Extras al docente ");
 
 	}
 
@@ -177,6 +208,37 @@ public class DocenteDeSecundaria {
 				+ ", horasBase=" + horasBase + ", horasExtras=" + horasExtras + ", sueldo=" + sueldo
 				+ ", fechaDeNacimiento=" + fechaDeNacimiento + ", precioHoraBase=" + precioHoraBase
 				+ ", precioHoraExtra=" + precioHoraExtra + "]";
+	}
+
+	public void guardarSueldoEnArray(int mesIngresado) {
+		// TODO Auto-generated method stub
+		arrayAnioSueldos[mesIngresado] = getSueldoBruto();
+
+	}
+
+	public double calcularSAC(int semestre) {
+		double sumatoria = 0;
+		double sueldoMayor = 0;
+		if (semestre == 1) {
+			sueldoMayor = arrayAnioSueldos[1];
+			for (int i = 1; i < 7; i++) {
+				// BUSCAMOS EL MAYOR SUELDO
+				if (arrayAnioSueldos[i + 1] > arrayAnioSueldos[i]) {
+					sueldoMayor = arrayAnioSueldos[i + 1];
+				}
+			}
+		} else {
+			sueldoMayor = arrayAnioSueldos[7];
+			for (int i = 7; i < 13; i++) {
+				// BUSCAMOS EL MAYOR SUELDO
+				if (arrayAnioSueldos[i + 1] > arrayAnioSueldos[i]) {
+					sueldoMayor = arrayAnioSueldos[i + 1];
+				}
+			}
+
+		}
+
+		return sueldoMayor / 2;
 	}
 
 }
